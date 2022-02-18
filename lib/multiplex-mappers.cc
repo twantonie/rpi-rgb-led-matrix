@@ -454,6 +454,23 @@ public:
   }
 };
 
+class P10FourDotOneMapper : public MultiplexMapperBase {
+public:
+  P10FourDotOneMapper() : MultiplexMapperBase("P10FourDotOne", 4) {}
+
+  void MapSinglePanel(int x, int y, int *matrix_x, int *matrix_y) const {
+    // Certain about this
+    *matrix_y = y % 4;
+
+    const int base = (x/8)*32;
+    const int offset = (3-(y/4)) * 8;
+
+    // dx is correct
+    const int dx = x%8;
+    *matrix_x = base + offset + dx;
+  }
+};
+
 /*
  * Here is where the registration happens.
  * If you add an instance of the mapper here, it will automatically be
@@ -481,6 +498,7 @@ static MuxMapperList *CreateMultiplexMapperList() {
   result->push_back(new P8Outdoor1R1G1BMultiplexMapper());
   result->push_back(new FlippedStripeMultiplexMapper());
   result->push_back(new P10Outdoor32x16HalfScanMapper());
+  result->push_back(new P10FourDotOneMapper());
   return result;
 }
 
